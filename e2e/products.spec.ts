@@ -24,6 +24,10 @@ test.describe('@products', () => {
         await productsPage.menuButton.click();
         await expect(productsPage.logoutButton).toBeVisible();
         await productsPage.menuCloseButton.click();
+        await expect(productsPage.allItemsButton).toBeHidden();
+        await expect(productsPage.aboutButton).toBeHidden();
+        await expect(productsPage.logoutButton).toBeHidden();
+        await expect(productsPage.menuCloseButton).toBeHidden();
         await productsPage.expectProductsPage();
     });
 

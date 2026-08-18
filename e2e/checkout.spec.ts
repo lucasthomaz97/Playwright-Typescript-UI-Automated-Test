@@ -136,16 +136,17 @@ test.describe('@checkout_functionality', () => {
         await expect(productsPage.shoppingCartBadge).toHaveText('1');
     });
 
-    test('Should finish checkout and display checkout complete page', async ({checkoutPage, checkoutData }) => {
+    test('Should finish checkout and display checkout complete page', async ({ page, checkoutPage, checkoutData }) => {
         await checkoutPage.checkoutButton.click();
         await checkoutPage.fillYourInformationForm(checkoutData.firstName, checkoutData.lastName, checkoutData.postalCode);
         await checkoutPage.yourInformationContinueButton.click();
         await checkoutPage.expectOverviewPage(1);
         await checkoutPage.overviewFinishButton.click();
+        await expect(page).toHaveURL(/.*checkout-complete/);
         await checkoutPage.expectCheckoutCompletePage();
     });
 
-    test('Should return to products page when clicking back home button on checkout complete page', async ({ productsPage, checkoutPage, checkoutData }) => {
+    test('Should return to products page when clicking back home button on checkout complete page', async ({ page, productsPage, checkoutPage, checkoutData }) => {
         await checkoutPage.checkoutButton.click();
         await checkoutPage.fillYourInformationForm(checkoutData.firstName, checkoutData.lastName, checkoutData.postalCode);
         await checkoutPage.yourInformationContinueButton.click();
@@ -153,6 +154,7 @@ test.describe('@checkout_functionality', () => {
         await checkoutPage.overviewFinishButton.click();
         await checkoutPage.expectCheckoutCompletePage();
         await checkoutPage.checkoutCompleteBackHomeButton.click();
+        await expect(page).toHaveURL(/.*inventory/);
         await productsPage.expectProductsPage();
     });
 });

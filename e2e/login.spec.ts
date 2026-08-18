@@ -41,8 +41,9 @@ test.describe('@login', () => {
         await expect(loginPage.errorMessageInvalidCredentials).toBeVisible();
     });
 
-    test('Should login successfully with valid credentials', async ({ loginPage, productsPage }) => {
+    test('Should login successfully with valid credentials', async ({ page, loginPage, productsPage }) => {
         await loginPage.login('standard_user', 'secret_sauce');
+        await expect(page).toHaveURL(/.*inventory/);
         await productsPage.expectProductsPage();
     });
 

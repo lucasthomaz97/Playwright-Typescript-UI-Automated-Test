@@ -6,7 +6,7 @@ test.describe('@inventory_item_consistency', () => {
     });
 
     for (let i = 0; i < 6; i++) {
-        test(`Should display item page when clicking on product item ${i + 1}`, async ({ itemPage, productsPage }) => {
+        test(`Should display item page when clicking on product item ${i + 1}`, async ({ page, itemPage, productsPage }) => {
             const firstProductName = await productsPage.getProductName(i).textContent();
             const firstProductPrice = await productsPage.getProductPrice(i).textContent();
             const firstProductDescription = await productsPage.getProductDescription(i).textContent();
@@ -27,8 +27,9 @@ test.describe('@inventory_item_components', () => {
         await itemPage.expectItemPage(0);
     });
 
-    test('Should return to products page on clicking back to products button', async ({ itemPage, productsPage }) => {
+    test('Should return to products page on clicking back to products button', async ({ page, itemPage, productsPage }) => {
         await itemPage.backToProductsButton.click();
+        await expect(page).toHaveURL(/.*inventory/);
         await expect(productsPage.productsHeading).toHaveText('Products');
         await expect(productsPage.productNames).toHaveCount(6);
     });
