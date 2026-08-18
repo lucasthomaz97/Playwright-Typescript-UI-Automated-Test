@@ -1,8 +1,8 @@
 # SauceDemo E2E Tests
 
-![Playwright](https://img.shields.io/badge/Playwright-1.59.1-45ba4c?style=flat-square&logo=playwright&logoColor=white)
+![Playwright](https://img.shields.io/badge/Playwright-1.60-45ba4c?style=flat-square&logo=playwright&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=flat-square&logo=typescript&logoColor=white)
-![Node.js](https://img.shields.io/badge/Node.js-25.x-339933?style=flat-square&logo=nodedotjs&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-24.x-339933?style=flat-square&logo=nodedotjs&logoColor=white)
 
 ---
 
@@ -29,9 +29,9 @@ End-to-end (E2E) automated tests for [SauceDemo](https://www.saucedemo.com), a d
 ```
 SauceDemoE2E/
 ├── e2e/                          # Test specifications
-│   ├── login.spec.ts             # Login flow tests (10)
-│   ├── products.spec.ts          # Products page tests (19)
-│   ├── checkout.spec.ts          # Checkout flow tests (28)
+│   ├── login.spec.ts             # Login flow tests (8)
+│   ├── products.spec.ts          # Products page tests (15)
+│   ├── checkout.spec.ts          # Checkout flow tests (19)
 │   └── inventory_item.spec.ts    # Inventory item detail tests (9)
 ├── page_objects/                 # Page Object Model
 │   ├── login_page.ts
@@ -41,45 +41,39 @@ SauceDemoE2E/
 ├── fixtures/
 │   └── index.ts                  # Custom fixtures + expect
 ├── helpers/
-│   └── data_factory.ts           # Faker-based test data factory
+│   └── data_factory.ts           # Faker-based test data factory + credentials
 ├── playwright.config.ts          # Test configuration
 └── .github/workflows/
     └── playwright.yml            # CI/CD pipeline
 ```
 
-**Total: 66 tests per browser (198 across Chromium, Firefox, WebKit)**
+**Total: 53 tests per browser (159 across Chromium, Firefox, WebKit)**
 
 ### Test Coverage
 
-**Login Flow (`login.spec.ts`) — 10 tests**
-- Form field presence and visibility
+**Login Flow (`login.spec.ts`) — 8 tests**
+- Login page display
 - Empty field validation (username, password, both)
-- Invalid credentials handling
+- Invalid credentials handling (invalid username, invalid password)
 - Locked user account handling
-- Successful login
+- Successful login with URL verification
 - Error message dismissal
 
-**Products Page (`products.spec.ts`) — 19 tests**
-- Navigation after successful login
+**Products Page (`products.spec.ts`) — 15 tests**
 - Side menu functionality (open, close, logout)
-- Product list display (6 items)
+- Product list display (6 items, exact count verification)
 - Product sorting: A-Z, Z-A, Price Low-High, Price High-Low
-- Add/Remove toggles with cart badge updates
+- Add/Remove toggles with cart badge and visibility verification
 
-**Checkout Flow (`checkout.spec.ts`) — 28 tests**
-- Continue shopping returns to products
-- Product info in cart (name, description, price, quantity)
-- Cart persistence after navigation
-- Adding 1-6 products to cart with overview validation
-- Checkout page elements and form navigation
-- Remove product from checkout
-- Empty field validation (first name, last name, postal code)
-- Cancel from Your Information and Overview pages
-- Complete checkout flow with Finish and Back Home
+**Checkout Flow (`checkout.spec.ts`) — 19 tests**
+- Cart consistency: continue shopping, cart persistence, product display (1, 3, 6 products) in cart and overview
+- Cart functionality: checkout page display, remove product
+- Your Information: empty inputs, cancel navigation, field validation (first name, last name, postal code)
+- Overview & Complete: cancel from overview, finish checkout with URL verification, back home navigation
 
 **Inventory Item (`inventory_item.spec.ts`) — 9 tests**
-- Product detail page displays correct name, price, and description (all 6 items)
-- Back to Products button
+- Product detail page displays correct name, price, and description with URL navigation verification (all 6 items)
+- Back to Products button with URL verification
 - Add to cart from detail page with badge update
 - Remove from cart from detail page
 
@@ -87,7 +81,10 @@ SauceDemoE2E/
 
 - **Page Object Model (POM)**: Encapsulates page-specific locators and actions for maintainability and reusability
 - **Custom Fixtures**: Shared authentication flow and page object injection across test files
+- **Centralized Credentials**: `CREDENTIALS` constant for all test accounts, eliminating hardcoded strings
 - **Data Factory**: Deterministic fake data via Faker (seeded) for checkout forms
+- **Data-driven Image Mapping**: `IMAGE_SLUGS` array for product images instead of brittle switch-case
+- **Strong Assertions**: `toHaveText()`, `toHaveCount()`, `toBeHidden()`, and URL verification throughout
 - **Multi-browser Testing**: Chromium, Firefox, and WebKit
 - **CI/CD Integration**: Automated execution on push and pull requests via GitHub Actions
 - **HTML Reports**: Built-in Playwright reporter for test results visualization
@@ -124,11 +121,13 @@ npm run test:all
 
 # Run specific test tags (grep)
 npx playwright test --grep "@products"
-npx playwright test --grep "@checkout_consistency"
 npx playwright test --grep "@login"
 npx playwright test --grep "@inventory_item_consistency"
 npx playwright test --grep "@inventory_item_components"
-npx playwright test --grep "@checkout_functionality"
+npx playwright test --grep "@checkout_consistency"
+npx playwright test --grep "@checkout_functionality_cart"
+npx playwright test --grep "@checkout_functionality_your_information"
+npx playwright test --grep "@checkout_functionality_overview_and_complete"
 
 # Run specific tag on specific browser
 npx playwright test --project chromium --grep "@products"
@@ -137,7 +136,7 @@ npx playwright test --project firefox --grep "@checkout_consistency"
 
 ### CI/CD
 
-Tests run automatically on every push and pull request to `main`/`master` branches. The pipeline runs all 66 tests across Chromium, Firefox, and WebKit with 2 retries on failure. Reports and video artifacts are available for 30 days as GitHub Actions artifacts.
+Tests run automatically on every push and pull request to `main`/`master` branches. The pipeline runs all 53 tests across Chromium, Firefox, and WebKit with 2 retries on failure. Reports and video artifacts are available for 30 days as GitHub Actions artifacts.
 
 ---
 
@@ -160,9 +159,9 @@ Testes automatizados end-to-end (E2E) para o [SauceDemo](https://www.saucedemo.c
 ```
 SauceDemoE2E/
 ├── e2e/                          # Especificações de teste
-│   ├── login.spec.ts             # Testes de login (10)
-│   ├── products.spec.ts          # Testes de produtos (19)
-│   ├── checkout.spec.ts          # Testes de checkout (28)
+│   ├── login.spec.ts             # Testes de login (8)
+│   ├── products.spec.ts          # Testes de produtos (15)
+│   ├── checkout.spec.ts          # Testes de checkout (19)
 │   └── inventory_item.spec.ts    # Testes de detalhes do item (9)
 ├── page_objects/                 # Page Object Model
 │   ├── login_page.ts
@@ -172,45 +171,39 @@ SauceDemoE2E/
 ├── fixtures/
 │   └── index.ts                  # Fixtures personalizados + expect
 ├── helpers/
-│   └── data_factory.ts           # Fábrica de dados com Faker
+│   └── data_factory.ts           # Fábrica de dados com Faker + credenciais
 ├── playwright.config.ts          # Configuração de testes
 └── .github/workflows/
     └── playwright.yml            # Pipeline de CI/CD
 ```
 
-**Total: 66 testes por browser (198 entre Chromium, Firefox, WebKit)**
+**Total: 53 testes por browser (159 entre Chromium, Firefox, WebKit)**
 
 ### Cobertura de Testes
 
-**Fluxo de Login (`login.spec.ts`) — 10 testes**
-- Presença e visibilidade dos campos do formulário
+**Fluxo de Login (`login.spec.ts`) — 8 testes**
+- Exibição da página de login
 - Validação de campos vazios (username, password, ambos)
-- Tratamento de credenciais inválidas
+- Tratamento de credenciais inválidas (username inválido, password inválido)
 - Tratamento de conta de usuário bloqueada
-- Login com sucesso
+- Login com sucesso com verificação de URL
 - Dispensação de mensagens de erro
 
-**Página de Produtos (`products.spec.ts`) — 19 testes**
-- Navegação após login com sucesso
+**Página de Produtos (`products.spec.ts`) — 15 testes**
 - Funcionalidade do menu lateral (abrir, fechar, logout)
-- Exibição da lista de produtos (6 itens)
+- Exibição da lista de produtos (6 itens, verificação de contagem exata)
 - Ordenação de produtos: A-Z, Z-A, Preço Menor-Maior, Preço Maior-Menor
-- Alternância Adicionar/Remover com atualização do badge do carrinho
+- Alternância Adicionar/Remover com verificação do badge e visibilidade
 
-**Fluxo de Checkout (`checkout.spec.ts`) — 28 testes**
-- Botão "Continue Shopping" retorna aos produtos
-- Informações do produto no carrinho (nome, descrição, preço, quantidade)
-- Persistência do carrinho após navegação
-- Adicionar 1-6 produtos ao carrinho com validação do Overview
-- Elementos da página de checkout e navegação do formulário
-- Remover produto do checkout
-- Validação de campos vazios (nome, sobrenome, CEP)
-- Cancelar das páginas Your Information e Overview
-- Fluxo completo de finalização com Finish e Back Home
+**Fluxo de Checkout (`checkout.spec.ts`) — 19 testes**
+- Consistência do carrinho: continuar comprando, persistência, exibição de produtos (1, 3, 6) no carrinho e overview
+- Funcionalidade do carrinho: exibição da página de checkout, remover produto
+- Sua Informação: entradas vazias, navegação de cancelamento, validação de campos (nome, sobrenome, CEP)
+- Overview e Conclusão: cancelar do overview, finalizar checkout com verificação de URL, navegação de voltar ao início
 
 **Detalhes do Item (`inventory_item.spec.ts`) — 9 testes**
-- Página de detalhes exibe nome, preço e descrição corretos (todos os 6 itens)
-- Botão "Back to Products"
+- Página de detalhes exibe nome, preço e descrição corretos com verificação de navegação por URL (todos os 6 itens)
+- Botão "Back to Products" com verificação de URL
 - Adicionar ao carrinho pela página de detalhes com atualização do badge
 - Remover do carrinho pela página de detalhes
 
@@ -218,7 +211,10 @@ SauceDemoE2E/
 
 - **Page Object Model (POM)**: Encapsula localizadores e ações específicos de cada página para manutenibilidade e reusabilidade
 - **Fixtures Personalizados**: Injeção de página e autenticação compartilhada entre arquivos de teste
+- **Credenciais Centralizadas**: Constante `CREDENTIALS` para todas as contas de teste, eliminando strings hardcoded
 - **Data Factory**: Dados fictícios determinísticos via Faker (com semente) para formulários de checkout
+- **Mapeamento de Imagens Data-driven**: Array `IMAGE_SLUGS` para imagens de produtos substituindo switch-case frágil
+- **Asserções Fortes**: `toHaveText()`, `toHaveCount()`, `toBeHidden()` e verificação de URL em todo o suite
 - **Testes Multi-navegador**: Chromium, Firefox e WebKit
 - **Integração CI/CD**: Execução automatizada em push e pull requests via GitHub Actions
 - **Relatórios HTML**: Reporter nativo do Playwright para visualização dos resultados
@@ -255,11 +251,13 @@ npm run test:all
 
 # Executar tags específicas (grep)
 npx playwright test --grep "@products"
-npx playwright test --grep "@checkout_consistency"
 npx playwright test --grep "@login"
 npx playwright test --grep "@inventory_item_consistency"
 npx playwright test --grep "@inventory_item_components"
-npx playwright test --grep "@checkout_functionality"
+npx playwright test --grep "@checkout_consistency"
+npx playwright test --grep "@checkout_functionality_cart"
+npx playwright test --grep "@checkout_functionality_your_information"
+npx playwright test --grep "@checkout_functionality_overview_and_complete"
 
 # Executar tag específica em navegador específico
 npx playwright test --project chromium --grep "@products"
@@ -268,4 +266,4 @@ npx playwright test --project firefox --grep "@checkout_consistency"
 
 ### CI/CD
 
-Os testes são executados automaticamente a cada push e pull request para as branches `main`/`master`. O pipeline executa todos os 66 testes nos navegadores Chromium, Firefox e WebKit com 2 retries em caso de falha. Relatórios e artefatos de vídeo ficam disponíveis por 30 dias como artefatos do GitHub Actions.
+Os testes são executados automaticamente a cada push e pull request para as branches `main`/`master`. O pipeline executa todos os 53 testes nos navegadores Chromium, Firefox e WebKit com 2 retries em caso de falha. Relatórios e artefatos de vídeo ficam disponíveis por 30 dias como artefatos do GitHub Actions.
