@@ -107,6 +107,10 @@ export class CheckoutPage {
         return this.page.locator('[data-test="back-to-products"]');
     }
 
+    get shoppingCartBadge(): Locator {
+        return this.page.locator('[data-test="shopping-cart-badge"]');
+    }
+
     getProductItem(i: number): Locator {
         return this.page.locator('[data-test="inventory-item"]').nth(i);
     }

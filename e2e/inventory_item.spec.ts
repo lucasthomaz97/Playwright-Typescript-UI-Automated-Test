@@ -1,20 +1,22 @@
 import { test, expect } from '../fixtures/index';
+import { CREDENTIALS } from '../helpers/data_factory';
 
 test.describe('@inventory_item_consistency', () => {
     test.beforeEach(async ({ loginPage }) => {
-        await loginPage.login('standard_user', 'secret_sauce');
+        await loginPage.login(CREDENTIALS.standard.username, CREDENTIALS.standard.password);
     });
 
     for (let i = 0; i < 6; i++) {
         test(`Should display item page when clicking on product item ${i + 1}`, async ({ page, itemPage, productsPage }) => {
-            const firstProductName = await productsPage.getProductName(i).textContent();
-            const firstProductPrice = await productsPage.getProductPrice(i).textContent();
-            const firstProductDescription = await productsPage.getProductDescription(i).textContent();
+            const expectedName = await productsPage.getProductName(i).textContent() ?? '';
+            const expectedPrice = await productsPage.getProductPrice(i).textContent() ?? '';
+            const expectedDescription = await productsPage.getProductDescription(i).textContent() ?? '';
             await productsPage.getProductName(i).click();
+            await expect(page).toHaveURL(/inventory-item\.html/);
             await itemPage.expectItemPage(i);
-            await expect(itemPage.itemNameLabel).toHaveText(firstProductName!);
-            await expect(itemPage.itemPriceLabel).toHaveText(firstProductPrice!);
-            await expect(itemPage.itemDescriptionLabel).toHaveText(firstProductDescription!);
+            await expect(itemPage.itemNameLabel).toHaveText(expectedName);
+            await expect(itemPage.itemPriceLabel).toHaveText(expectedPrice);
+            await expect(itemPage.itemDescriptionLabel).toHaveText(expectedDescription);
         });
     };
 
@@ -22,7 +24,7 @@ test.describe('@inventory_item_consistency', () => {
 
 test.describe('@inventory_item_components', () => {
     test.beforeEach(async ({ loginPage, productsPage, itemPage }) => {
-        await loginPage.login('standard_user', 'secret_sauce');
+        await loginPage.login(CREDENTIALS.standard.username, CREDENTIALS.standard.password);
         await productsPage.getProductName(0).click();
         await itemPage.expectItemPage(0);
     });

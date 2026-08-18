@@ -1,9 +1,10 @@
 import { test, expect } from '../fixtures/index';
+import { CREDENTIALS } from '../helpers/data_factory';
 
 const emptyFieldLoginCases = [
     { username: '', password: '', errorType: 'usernameRequired' as const, description: 'both fields empty' },
-    { username: 'standard_user', password: '', errorType: 'passwordRequired' as const, description: 'password empty' },
-    { username: '', password: 'secret_sauce', errorType: 'usernameRequired' as const, description: 'username empty' },
+    { username: CREDENTIALS.standard.username, password: '', errorType: 'passwordRequired' as const, description: 'password empty' },
+    { username: '', password: CREDENTIALS.standard.password, errorType: 'usernameRequired' as const, description: 'username empty' },
 ];
 
 test.describe('@login', () => {
@@ -27,28 +28,28 @@ test.describe('@login', () => {
     });
 
     test('Should display locked out error for locked user', async ({ loginPage }) => {
-        await loginPage.login('locked_out_user', 'secret_sauce');
+        await loginPage.login(CREDENTIALS.lockedOut.username, CREDENTIALS.lockedOut.password);
         await expect(loginPage.errorMessageLockedOut).toBeVisible();
     });
 
     test('Should display error for invalid password', async ({ loginPage }) => {
-        await loginPage.login('standard_user', 'invalid_password');
+        await loginPage.login(CREDENTIALS.invalidPassword.username, CREDENTIALS.invalidPassword.password);
         await expect(loginPage.errorMessageInvalidCredentials).toBeVisible();
     });
 
     test('Should display error for invalid username', async ({ loginPage }) => {
-        await loginPage.login('invalid_user', 'secret_sauce');
+        await loginPage.login(CREDENTIALS.invalidUsername.username, CREDENTIALS.invalidUsername.password);
         await expect(loginPage.errorMessageInvalidCredentials).toBeVisible();
     });
 
     test('Should login successfully with valid credentials', async ({ page, loginPage, productsPage }) => {
-        await loginPage.login('standard_user', 'secret_sauce');
+        await loginPage.login(CREDENTIALS.standard.username, CREDENTIALS.standard.password);
         await expect(page).toHaveURL(/.*inventory/);
         await productsPage.expectProductsPage();
     });
 
     test('Should close error message when clicking close button', async ({ loginPage }) => {
-        await loginPage.login('invalid_user', 'invalid_password');
+        await loginPage.login(CREDENTIALS.invalidBoth.username, CREDENTIALS.invalidBoth.password);
         await expect(loginPage.errorMessageInvalidCredentials).toBeVisible();
         await loginPage.closeButton.click();
         await expect(loginPage.errorMessageInvalidCredentials).not.toBeVisible();

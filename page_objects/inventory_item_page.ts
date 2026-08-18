@@ -31,23 +31,17 @@ export class ItemPage {
         return this.page.locator('[data-test="remove"]');
     }
 
+    private readonly IMAGE_SLUGS = [
+        'item-sauce-labs-backpack-img',
+        'item-sauce-labs-bike-light-img',
+        'item-sauce-labs-bolt-t-shirt-img',
+        'item-sauce-labs-fleece-jacket-img',
+        'item-sauce-labs-onesie-img',
+        'item-test.allthethings()-t-shirt-(red)-img',
+    ];
+
     getItemImage(i: number): Locator {
-        switch (i) {
-            case 0:
-                return this.page.locator('[data-test="item-sauce-labs-backpack-img"]');
-            case 1:
-                return this.page.locator('[data-test="item-sauce-labs-bike-light-img"]');
-            case 2:
-                return this.page.locator('[data-test="item-sauce-labs-bolt-t-shirt-img"]');
-            case 3:
-                return this.page.locator('[data-test="item-sauce-labs-fleece-jacket-img"]');
-            case 4:
-                return this.page.locator('[data-test="item-sauce-labs-onesie-img"]');
-            case 5:
-                return this.page.locator('[data-test="item-test.allthethings()-t-shirt-(red)-img"]');
-            default:
-                throw new Error('Invalid image index');
-        }
+        return this.page.locator(`[data-test="${this.IMAGE_SLUGS[i]}"]`);
     }
 
     async expectItemPage(i: number) {

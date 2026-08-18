@@ -1,8 +1,9 @@
 import { test, expect } from '../fixtures/index';
+import { CREDENTIALS } from '../helpers/data_factory';
 
 test.describe('@products', () => {
     test.beforeEach(async ({ loginPage }) => {
-        await loginPage.login('standard_user', 'secret_sauce');
+        await loginPage.login(CREDENTIALS.standard.username, CREDENTIALS.standard.password);
     });
 
     test('Should Display Menu options when clicking menu button', async ({ productsPage }) => {
