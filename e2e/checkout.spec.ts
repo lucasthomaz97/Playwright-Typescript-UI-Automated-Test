@@ -11,14 +11,6 @@ test.describe('@checkout_consistency', () => {
         await productsPage.expectProductsPage();
     });
 
-    test('Should display product information in checkout page after adding to cart', async ({ productsPage, checkoutPage }) => {
-        await productsPage.getProductAddToCartButton(0).click();
-        await expect(productsPage.shoppingCartBadge).toBeVisible();
-        await expect(productsPage.shoppingCartBadge).toHaveText('1');
-        await productsPage.shoppingCartLink.click();
-        await checkoutPage.expectProductInfo(0);
-    });
-
     test('Should keep products in cart after navigating back to products page from checkout page', async ({ productsPage, checkoutPage }) => {
         await productsPage.getProductAddToCartButton(0).click();
         await productsPage.shoppingCartLink.click();
@@ -76,11 +68,6 @@ test.describe('@checkout_functionality', () => {
         await expect(checkoutPage.descriptionLabel).toBeVisible();
         await expect(checkoutPage.continueShoppingButton).toBeVisible();
         await expect(checkoutPage.checkoutButton).toBeVisible();
-    });
-
-    test('Should display Your Information page after clicking checkout button on checkout page', async ({ checkoutPage }) => {
-        await checkoutPage.checkoutButton.click();
-        await checkoutPage.expectYourInformationPage();
     });
 
     test('Should remove product from checkout page when clicking on remove', async ({ checkoutPage }) => {

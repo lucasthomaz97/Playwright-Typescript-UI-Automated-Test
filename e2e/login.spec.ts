@@ -38,11 +38,6 @@ test.describe('@login', () => {
         await expect(loginPage.errorMessageInvalidCredentials).toBeVisible();
     });
 
-    test('Should display error for invalid credentials', async ({ loginPage }) => {
-        await loginPage.login('invalid_user', 'invalid_password');
-        await expect(loginPage.errorMessageInvalidCredentials).toBeVisible();
-    });
-
     test('Should login successfully with valid credentials', async ({ loginPage, productsPage }) => {
         await loginPage.login('standard_user', 'secret_sauce');
         await productsPage.expectProductsPage();

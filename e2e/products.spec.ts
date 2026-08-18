@@ -5,10 +5,6 @@ test.describe('@products', () => {
         await loginPage.login('standard_user', 'secret_sauce');
     });
 
-    test('Should display products page after successful login', async ({ productsPage }) => {
-        await productsPage.expectProductsPage();
-    });
-
     test('Should Display Menu options when clicking menu button', async ({ productsPage }) => {
         await productsPage.menuButton.click();
         await expect(productsPage.allItemsButton).toBeVisible();
@@ -17,21 +13,11 @@ test.describe('@products', () => {
         await expect(productsPage.menuCloseButton).toBeVisible();
     });
 
-    test('Should Display logout button when opening menu', async ({ productsPage }) => {
-        await productsPage.menuButton.click();
-        await expect(productsPage.logoutButton).toBeVisible();
-    });
-
     test('Should logout successfully', async ({ loginPage, productsPage }) => {
         await expect(productsPage.productsHeading).toBeVisible();
         await productsPage.menuButton.click();
         await productsPage.logoutButton.click();
         await loginPage.expectLoginPage();
-    });
-
-    test('Should Display close menu button when opening menu', async ({ productsPage }) => {
-        await productsPage.menuButton.click();
-        await expect(productsPage.menuCloseButton).toBeVisible();
     });
 
     test('Should close menu when clicking the close menu button', async ({ productsPage }) => {
