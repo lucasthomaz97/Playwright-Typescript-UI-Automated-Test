@@ -29,20 +29,24 @@ test.describe('@inventory_item_components', () => {
 
     test('Should return to products page on clicking back to products button', async ({ itemPage, productsPage }) => {
         await itemPage.backToProductsButton.click();
-        await productsPage.expectProductsPage();
+        await expect(productsPage.productsHeading).toHaveText('Products');
+        await expect(productsPage.productNames).toHaveCount(6);
     });
 
     test('Should add item to cart on clicking add to cart button', async ({ itemPage, productsPage }) => {
         await itemPage.addToCartButton.click();
+        await expect(itemPage.addToCartButton).toBeHidden();
         await expect(itemPage.removeButton).toBeVisible();
         await expect(productsPage.shoppingCartBadge).toHaveText('1');
     });
 
     test('Should remove item from cart on clicking remove button', async ({ itemPage, productsPage }) => {
         await itemPage.addToCartButton.click();
+        await expect(itemPage.addToCartButton).toBeHidden();
         await expect(itemPage.removeButton).toBeVisible();
         await expect(productsPage.shoppingCartBadge).toHaveText('1');
         await itemPage.removeButton.click();
+        await expect(itemPage.removeButton).toBeHidden();
         await expect(itemPage.addToCartButton).toBeVisible();
         await expect(productsPage.shoppingCartBadge).not.toBeVisible();
     });

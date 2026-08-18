@@ -28,9 +28,7 @@ test.describe('@products', () => {
     });
 
     test('Should display six products on products page', async ({ productsPage }) => {
-        for (let i = 0; i < 6; i++) {
-            await expect(productsPage.getProductItem(i)).toBeVisible();
-        }
+        await expect(productsPage.productNames).toHaveCount(6);
     });
 
     test('Should order Z to A correctly', async ({ productsPage }) => {
@@ -71,8 +69,11 @@ test.describe('@products', () => {
         for (let i = 0; i < 6; i++) {
             await productsPage.getProductAddToCartButton(i).click();
             await expect(productsPage.getProductRemoveButton(i)).toBeVisible();
+            await expect(productsPage.getProductAddToCartButton(i)).toBeHidden();
+            await expect(productsPage.shoppingCartBadge).toHaveText('1');
             await productsPage.getProductRemoveButton(i).click();
             await expect(productsPage.getProductAddToCartButton(i)).toBeVisible();
+            await expect(productsPage.getProductRemoveButton(i)).toBeHidden();
         }
     });
 

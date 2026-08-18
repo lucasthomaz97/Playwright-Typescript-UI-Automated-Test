@@ -64,8 +64,8 @@ test.describe('@checkout_functionality', () => {
 
     test('Should display checkout page after navigating to checkout page', async ({ checkoutPage }) => {
         await expect(checkoutPage.checkoutHeading).toHaveText('Your Cart');
-        await expect(checkoutPage.quantityLabel).toBeVisible();
-        await expect(checkoutPage.descriptionLabel).toBeVisible();
+        await expect(checkoutPage.quantityLabel).toHaveText('QTY');
+        await expect(checkoutPage.descriptionLabel).toHaveText('Description');
         await expect(checkoutPage.continueShoppingButton).toBeVisible();
         await expect(checkoutPage.checkoutButton).toBeVisible();
     });
@@ -86,7 +86,10 @@ test.describe('@checkout_functionality', () => {
     test('Should return to checkout page when clicking cancel button on Your Information page', async ({ checkoutPage }) => {
         await checkoutPage.checkoutButton.click();
         await checkoutPage.yourInformationCancelButton.click();
-        await expect(checkoutPage.checkoutHeading).toBeVisible();
+        await expect(checkoutPage.checkoutHeading).toHaveText('Your Cart');
+        await expect(checkoutPage.quantityLabel).toHaveText('QTY');
+        await expect(checkoutPage.descriptionLabel).toHaveText('Description');
+        await expect(checkoutPage.getProductItem(0)).toBeVisible();
     });
 
     test('Should display error message when trying to continue with all empty inputs on Your Information page', async ({ checkoutPage }) => {
@@ -130,6 +133,7 @@ test.describe('@checkout_functionality', () => {
         await checkoutPage.expectOverviewPage(1);
         await checkoutPage.overviewCancelButton.click();
         await productsPage.expectProductsPage();
+        await expect(productsPage.shoppingCartBadge).toHaveText('1');
     });
 
     test('Should finish checkout and display checkout complete page', async ({checkoutPage, checkoutData }) => {

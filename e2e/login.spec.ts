@@ -15,7 +15,10 @@ test.describe('@login', () => {
             const expectedError = errorType === 'passwordRequired'
                 ? loginPage.errorMessagePasswordRequired
                 : loginPage.errorMessageUsernameRequired;
-            await expect(expectedError).toBeVisible();
+            const expectedText = errorType === 'passwordRequired'
+                ? 'Epic sadface: Password is required'
+                : 'Epic sadface: Username is required';
+            await expect(expectedError).toHaveText(expectedText);
         });
     });
 

@@ -160,14 +160,14 @@ export class CheckoutPage {
         for (let i = 0; i < productsCount; i++) {
             await this.expectProductInfo(i);
         }
-        await expect(this.overviewPaymentInformationLabel).toBeVisible();
-        await expect(this.overviewPaymentValueLabel).toBeVisible();
-        await expect(this.overviewShippingInformationLabel).toBeVisible();
-        await expect(this.overviewShippingValueLabel).toBeVisible();
-        await expect(this.overviewSubtotalLabel).toBeVisible();
-        await expect(this.overviewTaxLabel).toBeVisible();
-        await expect(this.overviewTotalLabel).toBeVisible();
-        await expect(this.overviewTotalValueLabel).toBeVisible();
+        await expect(this.overviewPaymentInformationLabel).toHaveText('Payment Information:');
+        await expect(this.overviewPaymentValueLabel).toHaveText('SauceCard #31337');
+        await expect(this.overviewShippingInformationLabel).toHaveText('Shipping Information:');
+        await expect(this.overviewShippingValueLabel).toHaveText('Free Pony Express Delivery!');
+        await expect(this.overviewTotalLabel).toHaveText('Price Total');
+        await expect(this.overviewSubtotalLabel).toContainText('Item total:');
+        await expect(this.overviewTaxLabel).toContainText('Tax:');
+        await expect(this.overviewTotalValueLabel).toContainText('Total:');
         await expect(this.overviewCancelButton).toBeVisible();
         await expect(this.overviewFinishButton).toBeVisible();
     }
