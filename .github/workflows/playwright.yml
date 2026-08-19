@@ -25,7 +25,18 @@ jobs:
         key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
 
     - name: Install Playwright Browsers
-      run: npx playwright install chromium firefox webkit --with-deps
+      run: npx playwright install chromium firefox webkit
+
+    - name: Cache Playwright system dependencies
+      uses: actions/cache@v4
+      id: playwright-deps-cache
+      with:
+        path: /var/cache/apt/archives
+        key: playwright-deps-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+    - name: Install Playwright system dependencies
+      if: steps.playwright-deps-cache.outputs.cache-hit != 'true'
+      run: npx playwright install-deps chromium firefox webkit
 
     - name: Run Playwright tests
       run: npx playwright test
