@@ -5,9 +5,23 @@ on:
   pull_request:
     branches: [ main, master ]
 jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      pw-version: ${{ steps.pw-version.outputs.version }}
+    steps:
+    - uses: actions/checkout@v4
+    - name: Get Playwright version
+      id: pw-version
+      run: echo "version=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
+
   test:
+    needs: setup
     timeout-minutes: 20
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v${{ needs.setup.outputs.pw-version }}-noble
+      options: --user root
     steps:
     - uses: actions/checkout@v4
 
@@ -22,24 +36,14 @@ jobs:
       uses: actions/cache@v4
       with:
         path: ~/.cache/ms-playwright
-        key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+        key: playwright-${{ hashFiles('package-lock.json') }}
 
     - name: Install Playwright Browsers
       run: npx playwright install chromium firefox webkit
 
-    - name: Cache Playwright system dependencies
-      uses: actions/cache@v4
-      id: playwright-deps-cache
-      with:
-        path: /var/cache/apt/archives
-        key: playwright-deps-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
-
-    - name: Install Playwright system dependencies
-      if: steps.playwright-deps-cache.outputs.cache-hit != 'true'
-      run: npx playwright install-deps chromium firefox webkit
-
     - name: Run Playwright tests
       run: npx playwright test
+
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
