@@ -75,6 +75,7 @@ test.describe('@checkout_functionality_cart', () => {
     test('Should remove product from checkout page when clicking on remove', async ({ checkoutPage }) => {
         await checkoutPage.getProductRemoveButton(0).click();
         await expect(checkoutPage.getProductItem(0)).toBeHidden();
+        await expect(checkoutPage.shoppingCartBadge).not.toBeVisible();
     });
 });
 
@@ -99,6 +100,7 @@ test.describe('@checkout_functionality_your_information', () => {
         await expect(checkoutPage.quantityLabel).toHaveText('QTY');
         await expect(checkoutPage.descriptionLabel).toHaveText('Description');
         await expect(checkoutPage.getProductItem(0)).toBeVisible();
+        await expect(checkoutPage.shoppingCartBadge).toHaveText('1');
     });
 
     test('Should display error message when trying to continue with all empty inputs', async ({ checkoutPage }) => {

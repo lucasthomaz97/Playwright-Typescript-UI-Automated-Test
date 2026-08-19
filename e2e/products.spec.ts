@@ -8,10 +8,10 @@ test.describe('@products', () => {
 
     test('Should Display Menu options when clicking menu button', async ({ productsPage }) => {
         await productsPage.menuButton.click();
-        await expect(productsPage.allItemsButton).toBeVisible();
-        await expect(productsPage.aboutButton).toBeVisible();
-        await expect(productsPage.logoutButton).toBeVisible();
-        await expect(productsPage.menuCloseButton).toBeVisible();
+        await expect(productsPage.allItemsButton).toHaveText('All Items');
+        await expect(productsPage.aboutButton).toHaveText('About');
+        await expect(productsPage.logoutButton).toHaveText('Logout');
+        await expect(productsPage.menuCloseButton).toHaveText('Close Menu');
     });
 
     test('Should logout successfully', async ({ loginPage, productsPage }) => {
@@ -102,10 +102,10 @@ test.describe('@products', () => {
 
     for (let i = 0; i < 6; i++) {
         test(`Should display product information for product ${i + 1}`, async ({ productsPage }) => {
-            await expect(productsPage.getProductName(i)).toBeVisible();
+            await expect(productsPage.getProductName(i)).not.toBeEmpty();
             await expect(productsPage.getProductImage(i)).toBeVisible();
-            await expect(productsPage.getProductPrice(i)).toBeVisible();
-            await expect(productsPage.getProductDescription(i)).toBeVisible();
+            await expect(productsPage.getProductPrice(i)).not.toBeEmpty();
+            await expect(productsPage.getProductDescription(i)).not.toBeEmpty();
             await expect(productsPage.getProductAddToCartButton(i)).toBeVisible();
         });
     }

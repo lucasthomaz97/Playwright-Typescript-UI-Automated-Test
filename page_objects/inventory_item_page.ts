@@ -46,9 +46,9 @@ export class ItemPage {
 
     async expectItemPage(i: number) {
         await expect(this.getItemImage(i)).toBeVisible();
-        await expect(this.itemNameLabel).toBeVisible();
-        await expect(this.itemDescriptionLabel).toBeVisible();
-        await expect(this.itemPriceLabel).toBeVisible();
+        await expect(this.itemNameLabel).not.toBeEmpty();
+        await expect(this.itemDescriptionLabel).not.toBeEmpty();
+        await expect(this.itemPriceLabel).not.toBeEmpty();
         await expect(this.addToCartButton).toBeVisible();
         await expect(this.backToProductsButton).toBeVisible();
     }

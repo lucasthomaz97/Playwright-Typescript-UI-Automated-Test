@@ -137,9 +137,9 @@ export class CheckoutPage {
 
     async expectProductInfo(i: number, quantity: number = 1) {
         await expect(this.getQuantity(i)).toHaveText(quantity.toString());
-        await expect(this.getProductName(i)).toBeVisible();
-        await expect(this.getProductDescription(i)).toBeVisible();
-        await expect(this.getProductPrice(i)).toBeVisible();
+        await expect(this.getProductName(i)).not.toBeEmpty();
+        await expect(this.getProductDescription(i)).not.toBeEmpty();
+        await expect(this.getProductPrice(i)).not.toBeEmpty();
     }
 
     async expectCheckoutPage() {
