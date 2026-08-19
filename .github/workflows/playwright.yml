@@ -19,6 +19,8 @@ jobs:
     needs: setup
     timeout-minutes: 20
     runs-on: ubuntu-latest
+    env:
+      HOME: /root
     container:
       image: mcr.microsoft.com/playwright:v${{ needs.setup.outputs.pw-version }}-noble
       options: --user root
