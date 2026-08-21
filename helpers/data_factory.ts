@@ -8,6 +8,19 @@ export const CREDENTIALS = {
     invalidBoth: { username: 'invalid_user', password: 'invalid_password' },
 };
 
+export const LOGIN_ERROR_MESSAGES = {
+    usernameRequired: 'Epic sadface: Username is required',
+    passwordRequired: 'Epic sadface: Password is required',
+    lockedOut: 'Epic sadface: Sorry, this user has been locked out.',
+    invalidCredentials: 'Epic sadface: Username and password do not match any user in this service',
+};
+
+export const CHECKOUT_ERROR_MESSAGES = {
+    firstNameRequired: 'Error: First Name is required',
+    lastNameRequired: 'Error: Last Name is required',
+    postalCodeRequired: 'Error: Postal Code is required',
+};
+
 export interface Product {
     name: string;
     description: string;

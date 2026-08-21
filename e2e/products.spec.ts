@@ -16,7 +16,9 @@ test.describe('@products', () => {
 
     test('Should logout successfully', async ({ loginPage, productsPage }) => {
         await expect(productsPage.productsHeading).toBeVisible();
+        await expect(productsPage.menuButton).toBeVisible();
         await productsPage.menuButton.click();
+        await expect(productsPage.logoutButton).toBeVisible();
         await productsPage.logoutButton.click();
         await loginPage.expectLoginPage();
     });

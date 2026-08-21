@@ -133,7 +133,7 @@ export class CheckoutPage {
     }
 
     getProductRemoveButton(i: number): Locator {
-        return this.getProductItem(i).getByText('Remove');
+        return this.getProductItem(i).getByRole('button', { name: 'Remove' });
     }
 
     async expectProductInfo(i: number, quantity: number = 1) {
@@ -145,8 +145,8 @@ export class CheckoutPage {
 
     async expectCheckoutPage() {
         await expect(this.checkoutHeading).toHaveText('Your Cart');
-        await expect(this.quantityLabel).toBeVisible();
-        await expect(this.descriptionLabel).toBeVisible();
+        await expect(this.quantityLabel).toHaveText('QTY');
+        await expect(this.descriptionLabel).toHaveText('Description');
         await expect(this.continueShoppingButton).toBeVisible();
         await expect(this.checkoutButton).toBeVisible();
     }

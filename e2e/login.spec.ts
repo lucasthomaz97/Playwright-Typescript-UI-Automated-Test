@@ -1,5 +1,5 @@
 import { test, expect } from '../fixtures/index';
-import { CREDENTIALS } from '../helpers/data_factory';
+import { CREDENTIALS, LOGIN_ERROR_MESSAGES } from '../helpers/data_factory';
 
 const emptyFieldLoginCases = [
     { username: '', password: '', errorType: 'usernameRequired' as const, description: 'both fields empty' },
@@ -16,10 +16,7 @@ test.describe('@login', () => {
             const expectedError = errorType === 'passwordRequired'
                 ? loginPage.errorMessagePasswordRequired
                 : loginPage.errorMessageUsernameRequired;
-            const expectedText = errorType === 'passwordRequired'
-                ? 'Epic sadface: Password is required'
-                : 'Epic sadface: Username is required';
-            await expect(expectedError).toHaveText(expectedText);
+            await expect(expectedError).toHaveText(LOGIN_ERROR_MESSAGES[errorType]);
         });
     });
 

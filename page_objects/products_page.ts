@@ -52,7 +52,7 @@ export class ProductsPage {
     }
 
     getProductItem(i: number): Locator {
-        return this.page.locator('[data-test="inventory-item-description"]').nth(i);
+        return this.page.locator('[data-test="inventory-item"]').nth(i);
     }
 
     getProductName(i: number): Locator {
@@ -72,11 +72,11 @@ export class ProductsPage {
     }
 
     getProductAddToCartButton(i: number): Locator {
-        return this.getProductItem(i).getByText('Add to cart');
+        return this.getProductItem(i).getByRole('button', { name: 'Add to cart' });
     }
 
     getProductRemoveButton(i: number): Locator {
-        return this.getProductItem(i).getByText('Remove');
+        return this.getProductItem(i).getByRole('button', { name: 'Remove' });
     }
 
     async expectProductsPage() {

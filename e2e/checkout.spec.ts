@@ -1,5 +1,5 @@
 import { test, expect } from '../fixtures/index';
-import { CREDENTIALS } from '../helpers/data_factory';
+import { CREDENTIALS, CHECKOUT_ERROR_MESSAGES } from '../helpers/data_factory';
 
 test.describe('@checkout_consistency', () => {
     test.beforeEach(async ({ loginPage }) => {
@@ -47,9 +47,7 @@ test.describe('@checkout_consistency', () => {
             await productsPage.shoppingCartLink.click();
             await checkoutPage.checkoutButton.click();
             await checkoutPage.expectYourInformationPage();
-            await checkoutPage.yourInformationFirstNameInput.fill(checkoutData.firstName);
-            await checkoutPage.yourInformationLastNameInput.fill(checkoutData.lastName);
-            await checkoutPage.yourInformationPostalCodeInput.fill(checkoutData.postalCode);
+            await checkoutPage.fillYourInformationForm(checkoutData.firstName, checkoutData.lastName, checkoutData.postalCode);
             await checkoutPage.yourInformationContinueButton.click();
             await checkoutPage.expectOverviewPage(i + 1);
         });
@@ -65,11 +63,7 @@ test.describe('@checkout_functionality_cart', () => {
     });
 
     test('Should display checkout page after navigating to checkout page', async ({ checkoutPage }) => {
-        await expect(checkoutPage.checkoutHeading).toHaveText('Your Cart');
-        await expect(checkoutPage.quantityLabel).toHaveText('QTY');
-        await expect(checkoutPage.descriptionLabel).toHaveText('Description');
-        await expect(checkoutPage.continueShoppingButton).toBeVisible();
-        await expect(checkoutPage.checkoutButton).toBeVisible();
+        await checkoutPage.expectCheckoutPage();
     });
 
     test('Should remove product from checkout page when clicking on remove', async ({ checkoutPage }) => {
@@ -105,25 +99,25 @@ test.describe('@checkout_functionality_your_information', () => {
 
     test('Should display error message when trying to continue with all empty inputs', async ({ checkoutPage }) => {
         await checkoutPage.yourInformationContinueButton.click();
-        await expect(checkoutPage.yourInformationErrorMessage).toHaveText('Error: First Name is required');
+        await expect(checkoutPage.yourInformationErrorMessage).toHaveText(CHECKOUT_ERROR_MESSAGES.firstNameRequired);
     });
 
     test('Should display error message when trying to continue with empty First Name', async ({ checkoutPage, checkoutData }) => {
         await checkoutPage.fillYourInformationForm('', checkoutData.lastName, checkoutData.postalCode);
         await checkoutPage.yourInformationContinueButton.click();
-        await expect(checkoutPage.yourInformationErrorMessage).toHaveText('Error: First Name is required');
+        await expect(checkoutPage.yourInformationErrorMessage).toHaveText(CHECKOUT_ERROR_MESSAGES.firstNameRequired);
     });
 
     test('Should display error message when trying to continue with empty Last Name', async ({ checkoutPage, checkoutData }) => {
         await checkoutPage.fillYourInformationForm(checkoutData.firstName, '', checkoutData.postalCode);
         await checkoutPage.yourInformationContinueButton.click();
-        await expect(checkoutPage.yourInformationErrorMessage).toHaveText('Error: Last Name is required');
+        await expect(checkoutPage.yourInformationErrorMessage).toHaveText(CHECKOUT_ERROR_MESSAGES.lastNameRequired);
     });
 
     test('Should display error message when trying to continue with empty Postal Code', async ({ checkoutPage, checkoutData }) => {
         await checkoutPage.fillYourInformationForm(checkoutData.firstName, checkoutData.lastName, '');
         await checkoutPage.yourInformationContinueButton.click();
-        await expect(checkoutPage.yourInformationErrorMessage).toHaveText('Error: Postal Code is required');
+        await expect(checkoutPage.yourInformationErrorMessage).toHaveText(CHECKOUT_ERROR_MESSAGES.postalCodeRequired);
     });
 });
 

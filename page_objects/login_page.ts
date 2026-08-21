@@ -1,4 +1,5 @@
 import { Page, Locator, expect } from '@playwright/test';
+import { LOGIN_ERROR_MESSAGES } from '../helpers/data_factory';
 
 export class LoginPage {
     private page: Page;
@@ -28,19 +29,19 @@ export class LoginPage {
     }
 
     get errorMessageLockedOut(): Locator {
-        return this.page.getByText('Epic sadface: Sorry, this user has been locked out.');
+        return this.page.getByText(LOGIN_ERROR_MESSAGES.lockedOut);
     }
 
     get errorMessageInvalidCredentials(): Locator {
-        return this.page.getByText('Epic sadface: Username and password do not match any user in this service');
+        return this.page.getByText(LOGIN_ERROR_MESSAGES.invalidCredentials);
     }
 
     get errorMessageUsernameRequired(): Locator {
-        return this.page.getByText('Epic sadface: Username is required');
+        return this.page.getByText(LOGIN_ERROR_MESSAGES.usernameRequired);
     }
 
     get errorMessagePasswordRequired(): Locator {
-        return this.page.getByText('Epic sadface: Password is required');
+        return this.page.getByText(LOGIN_ERROR_MESSAGES.passwordRequired);
     }
 
     async goto(): Promise<void> {
