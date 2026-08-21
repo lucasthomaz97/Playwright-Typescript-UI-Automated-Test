@@ -44,7 +44,7 @@ test.describe('@login', () => {
 
     test('Should login successfully with valid credentials', async ({ page, loginPage, productsPage }) => {
         await loginPage.login(CREDENTIALS.standard.username, CREDENTIALS.standard.password);
-        await expect(page).toHaveURL(/.*inventory/);
+        await expect(page).toHaveURL(/\/inventory\.html$/);
         await productsPage.expectProductsPage();
     });
 

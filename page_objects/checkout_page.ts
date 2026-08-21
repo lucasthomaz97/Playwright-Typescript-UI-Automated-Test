@@ -1,4 +1,5 @@
 import { Page, Locator, expect } from '@playwright/test';
+import { formatPrice } from '../helpers/data_factory';
 
 export class CheckoutPage {
     private page: Page;
@@ -161,17 +162,22 @@ export class CheckoutPage {
 
     async expectOverviewPage(productsCount: number = 1) {
         await expect(this.checkoutHeading).toHaveText('Checkout: Overview');
+        let subtotalCents = 0;
         for (let i = 0; i < productsCount; i++) {
             await this.expectProductInfo(i);
+            const priceText = await this.getProductPrice(i).textContent() ?? '';
+            subtotalCents += Math.round(parseFloat(priceText.replace('$', '')) * 100);
         }
+        const taxCents = Math.round(subtotalCents * 0.08);
+        const totalCents = subtotalCents + taxCents;
         await expect(this.overviewPaymentInformationLabel).toHaveText('Payment Information:');
         await expect(this.overviewPaymentValueLabel).toHaveText('SauceCard #31337');
         await expect(this.overviewShippingInformationLabel).toHaveText('Shipping Information:');
         await expect(this.overviewShippingValueLabel).toHaveText('Free Pony Express Delivery!');
         await expect(this.overviewTotalLabel).toHaveText('Price Total');
-        await expect(this.overviewSubtotalLabel).toContainText('Item total:');
-        await expect(this.overviewTaxLabel).toContainText('Tax:');
-        await expect(this.overviewTotalValueLabel).toContainText('Total:');
+        await expect(this.overviewSubtotalLabel).toHaveText(`Item total: ${formatPrice(subtotalCents)}`);
+        await expect(this.overviewTaxLabel).toHaveText(`Tax: ${formatPrice(taxCents)}`);
+        await expect(this.overviewTotalValueLabel).toHaveText(`Total: ${formatPrice(totalCents)}`);
         await expect(this.overviewCancelButton).toBeVisible();
         await expect(this.overviewFinishButton).toBeVisible();
     }

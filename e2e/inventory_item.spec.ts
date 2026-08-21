@@ -31,7 +31,7 @@ test.describe('@inventory_item_components', () => {
 
     test('Should return to products page on clicking back to products button', async ({ page, itemPage, productsPage }) => {
         await itemPage.backToProductsButton.click();
-        await expect(page).toHaveURL(/.*inventory/);
+        await expect(page).toHaveURL(/\/inventory\.html$/);
         await expect(productsPage.productsHeading).toHaveText('Products');
         await expect(productsPage.productNames).toHaveCount(6);
     });

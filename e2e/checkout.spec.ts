@@ -146,7 +146,7 @@ test.describe('@checkout_functionality_overview_and_complete', () => {
 
     test('Should finish checkout and display checkout complete page', async ({ page, checkoutPage }) => {
         await checkoutPage.overviewFinishButton.click();
-        await expect(page).toHaveURL(/.*checkout-complete/);
+        await expect(page).toHaveURL(/\/checkout-complete\.html$/);
         await checkoutPage.expectCheckoutCompletePage();
     });
 
@@ -154,7 +154,7 @@ test.describe('@checkout_functionality_overview_and_complete', () => {
         await checkoutPage.overviewFinishButton.click();
         await checkoutPage.expectCheckoutCompletePage();
         await checkoutPage.checkoutCompleteBackHomeButton.click();
-        await expect(page).toHaveURL(/.*inventory/);
+        await expect(page).toHaveURL(/\/inventory\.html$/);
         await productsPage.expectProductsPage();
     });
 });

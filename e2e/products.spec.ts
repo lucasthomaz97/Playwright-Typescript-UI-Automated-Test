@@ -1,5 +1,5 @@
 import { test, expect } from '../fixtures/index';
-import { CREDENTIALS } from '../helpers/data_factory';
+import { CREDENTIALS, PRODUCTS, PRODUCT_NAMES, PRODUCT_PRICES, formatPrice } from '../helpers/data_factory';
 
 test.describe('@products', () => {
     test.beforeEach(async ({ loginPage }) => {
@@ -24,6 +24,7 @@ test.describe('@products', () => {
     test('Should close menu when clicking the close menu button', async ({ productsPage }) => {
         await productsPage.menuButton.click();
         await expect(productsPage.logoutButton).toBeVisible();
+        await expect(productsPage.menuCloseButton).toBeVisible();
         await productsPage.menuCloseButton.click();
         await expect(productsPage.allItemsButton).toBeHidden();
         await expect(productsPage.aboutButton).toBeHidden();
@@ -40,16 +41,14 @@ test.describe('@products', () => {
         await productsPage.productSortSelect.selectOption('za');
 
         const products = await productsPage.productNames.allTextContents();
-        const sortedProducts = [...products].sort().reverse();
-        expect(products).toEqual(sortedProducts);
+        expect(products).toEqual([...PRODUCT_NAMES].sort().reverse());
     });
 
     test('Should order A to Z correctly', async ({ productsPage }) => {
         await productsPage.productSortSelect.selectOption('az');
 
         const products = await productsPage.productNames.allTextContents();
-        const sortedProducts = [...products].sort();
-        expect(products).toEqual(sortedProducts);
+        expect(products).toEqual([...PRODUCT_NAMES].sort());
     });
 
     test('Should order by price low to high correctly', async ({ productsPage }) => {
@@ -57,8 +56,7 @@ test.describe('@products', () => {
 
         const prices = await productsPage.productPrices.allTextContents();
         const pricesAsNumbers = prices.map(p => parseFloat(p.replace('$', '')));
-        const sortedPrices = [...pricesAsNumbers].sort((a, b) => a - b);
-        expect(pricesAsNumbers).toEqual(sortedPrices);
+        expect(pricesAsNumbers).toEqual([...PRODUCT_PRICES].sort((a, b) => a - b));
     });
 
     test('Should order by price high to low correctly', async ({ productsPage }) => {
@@ -66,8 +64,7 @@ test.describe('@products', () => {
 
         const prices = await productsPage.productPrices.allTextContents();
         const pricesAsNumbers = prices.map(p => parseFloat(p.replace('$', '')));
-        const sortedPrices = [...pricesAsNumbers].sort((a, b) => b - a);
-        expect(pricesAsNumbers).toEqual(sortedPrices);
+        expect(pricesAsNumbers).toEqual([...PRODUCT_PRICES].sort((a, b) => b - a));
     });
 
     test('Should toggle add to cart and remove buttons for each product', async ({ productsPage }) => {
@@ -102,10 +99,10 @@ test.describe('@products', () => {
 
     for (let i = 0; i < 6; i++) {
         test(`Should display product information for product ${i + 1}`, async ({ productsPage }) => {
-            await expect(productsPage.getProductName(i)).not.toBeEmpty();
+            await expect(productsPage.getProductName(i)).toHaveText(PRODUCTS[i].name);
             await expect(productsPage.getProductImage(i)).toBeVisible();
-            await expect(productsPage.getProductPrice(i)).not.toBeEmpty();
-            await expect(productsPage.getProductDescription(i)).not.toBeEmpty();
+            await expect(productsPage.getProductPrice(i)).toHaveText(formatPrice(PRODUCTS[i].price * 100));
+            await expect(productsPage.getProductDescription(i)).toHaveText(PRODUCTS[i].description);
             await expect(productsPage.getProductAddToCartButton(i)).toBeVisible();
         });
     }
